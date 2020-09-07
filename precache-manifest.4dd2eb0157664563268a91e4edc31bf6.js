@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8753a2cd31a81196998528c5954d46b8",
+    "revision": "1f2e80713ec97659b8f81efc872bad3c",
     "url": "/agilefreaks_bluebottle/index.html"
   },
   {
-    "revision": "92b709db33fffc646fc3",
+    "revision": "7e77166199cbe7d0836f",
     "url": "/agilefreaks_bluebottle/static/css/main.f3debe5b.chunk.css"
   },
   {
@@ -36,8 +36,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/agilefreaks_bluebottle/static/js/6.cfa90f3d.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "92b709db33fffc646fc3",
-    "url": "/agilefreaks_bluebottle/static/js/main.8829100b.chunk.js"
+    "revision": "7e77166199cbe7d0836f",
+    "url": "/agilefreaks_bluebottle/static/js/main.6ebba2d1.chunk.js"
   },
   {
     "revision": "ee61e13a703506679635",
