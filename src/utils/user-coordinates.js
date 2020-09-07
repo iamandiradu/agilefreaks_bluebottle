@@ -1,7 +1,5 @@
-export default {
-    getUserCoordinates: () => {
-        return new Promise(function (resolve, reject) {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-    },
-};
+export function getUserCoordinates() {
+    return new Promise(function (resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+}
