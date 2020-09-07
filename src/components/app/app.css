@@ -10,14 +10,20 @@ body,
     text-align: center;
 }
 
+.spinnerWrapper {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .spinner {
-    height: 40vmin;
+    height: 20vmin;
     pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
     .spinner {
-        animation: logo-spin infinite 20s linear;
+        animation: logo-spin infinite 2s linear;
     }
 }
 

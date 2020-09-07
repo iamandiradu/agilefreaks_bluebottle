@@ -3,6 +3,7 @@ import { BubbleMap } from '../';
 import { getUserDistance, getUserCoordinates } from '../../utils/';
 import api from '../../api/api.js';
 import logo from '../../images/logo.png';
+import spinner from '../../images/spinner.svg';
 import './app.css';
 
 const coffeeShopsShown = 3;
@@ -12,6 +13,7 @@ function App() {
     const [apiData, setApiData] = useState([]);
     const [userCoordinates, setUserCoordinates] = useState({});
     const [processedApiData, setProcessedApiData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Get API Data & User coordinates
     useEffect(() => {
@@ -75,13 +77,23 @@ function App() {
                     color: 'red',
                     value: 1,
                 });
-                console.log(coffeeShopsData);
             }
             setProcessedApiData(coffeeShopsData);
         }
     }, [apiData, userCoordinates, userCoordinates.latitude, userCoordinates.longitude]);
 
-    return (
+    // Set isLoading to false if all data is loaded
+    useEffect(() => {
+        if (apiToken && apiData && userCoordinates.latitude && userCoordinates.longitude) {
+            setIsLoading(false);
+        }
+    }, [apiData, apiToken, userCoordinates.latitude, userCoordinates.longitude]);
+
+    return isLoading ? (
+        <div className="spinnerWrapper">
+            <img src={spinner} className="spinner" alt="spinner" />
+        </div>
+    ) : (
         <div className="app">
             <header className="header">
                 <div>
