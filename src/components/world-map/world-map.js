@@ -5,7 +5,6 @@ import am4themes_dark from '@amcharts/amcharts4/themes/dark';
 import am4geodata_worldLow from '@amcharts/amcharts4-geodata/worldLow';
 
 function WorldMap(props) {
-    console.log(props);
     const animateBullet = useCallback((circle) => {
         let animation = circle.animate(
             [
@@ -46,23 +45,23 @@ function WorldMap(props) {
             imageSeries.mapImages.template.tooltipText = `[bold]{label}[/]\n{customTooltip}`;
 
             let circle = imageSeries.mapImages.template.createChild(am4core.Circle);
-            circle.radius = 0.3;
+            circle.radius = 5;
             circle.propertyFields.fill = 'color';
 
             let circle2 = imageSeries.mapImages.template.createChild(am4core.Circle);
-            circle2.radius = 0.3;
+            circle2.radius = 5;
             circle2.propertyFields.fill = 'color';
 
             circle2.events.on('inited', function (event) {
                 animateBullet(event.target);
             });
 
-            imageSeries.data = props.processedApiData;
+            imageSeries.data = props.data !== [] && props.data;
         });
         return () => {
             chart.dispose();
         };
-    }, [animateBullet, props.processedApiData]);
+    }, [animateBullet, props.data]);
 
     return (
         <div
