@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BubbleMap } from '../';
+import api from '../../api/api.js';
 import logo from '../../images/logo.png';
 import './app.css';
 
 function App() {
+    const [apiToken, setApiToken] = useState('');
+    const [apiData, setApiData] = useState([]);
+    // Get API Data
+    useEffect(() => {
+        api.getToken()
+            .then((token) => {
+                setApiToken(token);
+                api.getData(token).then((data) => {
+                    setApiData(data);
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
+
     const dummyData = [
         {
             label: 'Moscow',
