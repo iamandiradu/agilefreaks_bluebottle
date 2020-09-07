@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { BubbleMap } from '../';
+import Switch from 'react-switch';
+import { BubbleMap, WorldMap } from '../';
 import { getUserDistance, getUserCoordinates } from '../../utils/';
 import api from '../../api/api.js';
 import logo from '../../images/logo.png';
 import spinner from '../../images/spinner.svg';
 import './app.css';
 
-const coffeeShopsShown = 3;
+const coffeeShopsShownOnBubbleMap = 3;
+const coffeeShopsShownOnWorldMap = 6;
 const coffeeShopNameDelimiter = 'Blue Bottle ';
+
 function App() {
     const [apiToken, setApiToken] = useState('');
     const [apiData, setApiData] = useState([]);
     const [userCoordinates, setUserCoordinates] = useState({});
     const [processedApiData, setProcessedApiData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isMapToggled, setIsMapToggled] = useState(false);
 
     // Get API Data & User coordinates
     useEffect(() => {
@@ -54,7 +58,8 @@ function App() {
                 });
                 apiData.sort((a, b) => (a.distance > b.distance ? 1 : -1));
                 apiData.forEach((coffeeShop, index) => {
-                    index < coffeeShopsShown &&
+                    index <
+                        (isMapToggled ? coffeeShopsShownOnWorldMap : coffeeShopsShownOnBubbleMap) &&
                         coffeeShopsData.push({
                             label: coffeeShopNameDelimiter
                                 ? coffeeShop.name.split(coffeeShopNameDelimiter).pop()
@@ -80,7 +85,13 @@ function App() {
             }
             setProcessedApiData(coffeeShopsData);
         }
-    }, [apiData, userCoordinates, userCoordinates.latitude, userCoordinates.longitude]);
+    }, [
+        apiData,
+        isMapToggled,
+        userCoordinates,
+        userCoordinates.latitude,
+        userCoordinates.longitude,
+    ]);
 
     // Set isLoading to false if all data is loaded
     useEffect(() => {
@@ -89,6 +100,10 @@ function App() {
         }
     }, [apiData, apiToken, userCoordinates.latitude, userCoordinates.longitude]);
 
+    const handleMapToggle = (checked) => {
+        setIsMapToggled(checked);
+    };
+
     return isLoading ? (
         <div className="spinnerWrapper">
             <img src={spinner} className="spinner" alt="spinner" />
@@ -96,13 +111,18 @@ function App() {
     ) : (
         <div className="app">
             <header className="header">
+                <img src={logo} className="logo" alt="logo" />
                 <div>
                     <span>Coffee Shop Finder Map </span>
+                    <Switch onChange={handleMapToggle} checked={isMapToggled} />
                 </div>
-                <img src={logo} className="logo" alt="logo" />
             </header>
             <div className="main">
-                <BubbleMap data={processedApiData} />
+                {isMapToggled ? (
+                    <WorldMap data={processedApiData} />
+                ) : (
+                    <BubbleMap data={processedApiData} />
+                )}
             </div>
         </div>
     );
