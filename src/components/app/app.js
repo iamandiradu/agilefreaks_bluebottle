@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BubbleMap } from '../';
+import utils from '../../utils/user-coordinates.js';
 import api from '../../api/api.js';
 import logo from '../../images/logo.png';
 import './app.css';
@@ -7,7 +8,9 @@ import './app.css';
 function App() {
     const [apiToken, setApiToken] = useState('');
     const [apiData, setApiData] = useState([]);
-    // Get API Data
+    const [userCoordinates, setUserCoordinates] = useState({});
+
+    // Get API Data & User coordinates
     useEffect(() => {
         api.getToken()
             .then((token) => {
@@ -18,6 +21,18 @@ function App() {
             })
             .catch((error) => {
                 console.error(error);
+            });
+
+        utils
+            .getUserCoordinates()
+            .then((position) => {
+                setUserCoordinates({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                });
+            })
+            .catch((error) => {
+                console.error(error.message);
             });
     }, []);
 
