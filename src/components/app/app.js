@@ -117,13 +117,15 @@ function App() {
                     <Switch onChange={handleMapToggle} checked={isMapToggled} />
                 </div>
             </header>
-            <div className="main">
-                {isMapToggled ? (
-                    <WorldMap data={processedApiData} />
-                ) : (
-                    <BubbleMap data={processedApiData} />
-                )}
-            </div>
+            {processedApiData.length > 0 && (
+                <div className="main">
+                    {isMapToggled ? (
+                        <WorldMap data={processedApiData} />
+                    ) : (
+                        <BubbleMap data={processedApiData} />
+                    )}
+                </div>
+            )}
         </div>
     );
 }
