@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Switch from 'react-switch';
 import { XYChart, WorldMap } from '../';
 import { getUserDistance, useDebounce } from '../../utils/';
@@ -25,6 +25,13 @@ function App() {
     const [isLoading, setIsLoading] = useState(true);
     const [isMapToggled, setIsMapToggled] = useState(false);
     const [shouldRenderMap, setShouldRenderMap] = useState(false);
+
+    const debouncedUserLatitude = useDebounce(userCoordinatesForm.latitude, 500);
+    const debouncedUserLongitude = useDebounce(userCoordinatesForm.longitude, 500);
+
+    const handleMapToggle = (checked) => {
+        setIsMapToggled(checked);
+    };
 
     // Get API Data
     useEffect(() => {
@@ -96,6 +103,7 @@ function App() {
         }
     }, [apiData, apiToken]);
 
+    // Handle map rendering
     useEffect(() => {
         if (apiData && !isLoading) {
             if (apiData && userCoordinates.longitude && userCoordinates.latitude && !isLoading) {
@@ -104,13 +112,7 @@ function App() {
         }
     }, [apiData, userCoordinates.latitude, isLoading, userCoordinates.longitude]);
 
-    const handleMapToggle = (checked) => {
-        setIsMapToggled(checked);
-    };
-
-    const debouncedUserLatitude = useDebounce(userCoordinatesForm.latitude, 500);
-    const debouncedUserLongitude = useDebounce(userCoordinatesForm.longitude, 500);
-
+    // Debounce user coordinates form
     useEffect(() => {
         if (debouncedUserLatitude) {
             setUserCoordinates((prevState) => ({
@@ -143,7 +145,7 @@ function App() {
                 <label className="formLabel">
                     Latitude:
                     <input
-                        type="text"
+                        type="number"
                         name="latitude"
                         onChange={(e) => setUserCoordinatesForm({ latitude: e.target.value })}
                     />
@@ -151,7 +153,7 @@ function App() {
                 <label className="formLabel">
                     Longitude:
                     <input
-                        type="text"
+                        type="number"
                         name="longitude"
                         onChange={(e) => setUserCoordinatesForm({ longitude: e.target.value })}
                     />
