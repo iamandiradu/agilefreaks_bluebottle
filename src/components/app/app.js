@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Switch from 'react-switch';
-import { BubbleMap, WorldMap } from '../';
+import { XYChart, WorldMap } from '../';
 import { getUserDistance, useDebounce } from '../../utils/';
 import api from '../../api/api.js';
 import logo from '../../images/logo.png';
@@ -75,8 +75,8 @@ function App() {
                 });
                 coffeeShopsData.push({
                     label: 'User',
-                    latitude: userCoordinates.latitude,
-                    longitude: userCoordinates.longitude,
+                    latitude: parseFloat(userCoordinates.latitude),
+                    longitude: parseFloat(userCoordinates.longitude),
                     color: 'red',
                     value: 1,
                 });
@@ -164,7 +164,7 @@ function App() {
                     {isMapToggled ? (
                         <WorldMap data={processedApiData} />
                     ) : (
-                        <BubbleMap data={processedApiData} />
+                        <XYChart data={processedApiData} />
                     )}
                 </div>
             ) : (

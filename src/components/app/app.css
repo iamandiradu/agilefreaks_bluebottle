@@ -55,6 +55,12 @@ p {
 .formLabel:nth-child(2) {
     margin-left: 12px;
 }
+
+#xy-graph,
+#world-map {
+    height: 85vh;
+}
+
 input[type='text'] {
     background-color: #585858;
     border: none;
