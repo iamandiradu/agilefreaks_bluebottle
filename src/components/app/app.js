@@ -7,8 +7,7 @@ import logo from '../../images/logo.png';
 import spinner from '../../images/spinner.svg';
 import './app.css';
 
-const coffeeShopsShownOnBubbleMap = 3;
-const coffeeShopsShownOnWorldMap = 6;
+const coffeeShopsShownOnMap = 3;
 const coffeeShopNameDelimiter = 'Blue Bottle ';
 
 function App() {
@@ -56,8 +55,7 @@ function App() {
                 });
                 apiData.sort((a, b) => (a.distance > b.distance ? 1 : -1));
                 apiData.forEach((coffeeShop, index) => {
-                    index <
-                        (isMapToggled ? coffeeShopsShownOnWorldMap : coffeeShopsShownOnBubbleMap) &&
+                    index < coffeeShopsShownOnMap &&
                         coffeeShopsData.push({
                             label: coffeeShopNameDelimiter
                                 ? coffeeShop.name.split(coffeeShopNameDelimiter).pop()
