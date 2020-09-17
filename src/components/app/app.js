@@ -1,36 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import Switch from 'react-switch';
-import { BubbleMap, WorldMap } from '../';
-import { getUserDistance, getUserCoordinates } from '../../utils/';
+import { XYChart, WorldMap } from '../';
+import { getUserDistance, useDebounce } from '../../utils/';
 import api from '../../api/api.js';
 import logo from '../../images/logo.png';
 import spinner from '../../images/spinner.svg';
 import './app.css';
 
-const coffeeShopsShownOnBubbleMap = 3;
-const coffeeShopsShownOnWorldMap = 6;
+const coffeeShopsShownOnMap = 3;
 const coffeeShopNameDelimiter = 'Blue Bottle ';
 
 function App() {
     const [apiToken, setApiToken] = useState('');
     const [apiData, setApiData] = useState([]);
-    const [userCoordinates, setUserCoordinates] = useState({});
+    const [userCoordinates, setUserCoordinates] = useState({
+        latitude: '',
+        longitude: '',
+    });
+    const [userCoordinatesForm, setUserCoordinatesForm] = useState({
+        latitude: '',
+        longitude: '',
+    });
     const [processedApiData, setProcessedApiData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isMapToggled, setIsMapToggled] = useState(false);
+    const [shouldRenderMap, setShouldRenderMap] = useState(false);
 
-    // Get API Data & User coordinates
+    const debouncedUserLatitude = useDebounce(userCoordinatesForm.latitude, 500);
+    const debouncedUserLongitude = useDebounce(userCoordinatesForm.longitude, 500);
+
+    const handleMapToggle = (checked) => {
+        setIsMapToggled(checked);
+    };
+
+    // Get API Data
     useEffect(() => {
-        getUserCoordinates()
-            .then((position) => {
-                setUserCoordinates({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                });
-            })
-            .catch((error) => {
-                console.error(error.message);
-            });
         api.getToken()
             .then((token) => {
                 setApiToken(token);
@@ -58,8 +62,7 @@ function App() {
                 });
                 apiData.sort((a, b) => (a.distance > b.distance ? 1 : -1));
                 apiData.forEach((coffeeShop, index) => {
-                    index <
-                        (isMapToggled ? coffeeShopsShownOnWorldMap : coffeeShopsShownOnBubbleMap) &&
+                    index < coffeeShopsShownOnMap &&
                         coffeeShopsData.push({
                             label: coffeeShopNameDelimiter
                                 ? coffeeShop.name.split(coffeeShopNameDelimiter).pop()
@@ -77,8 +80,8 @@ function App() {
                 });
                 coffeeShopsData.push({
                     label: 'User',
-                    latitude: userCoordinates.latitude,
-                    longitude: userCoordinates.longitude,
+                    latitude: parseFloat(userCoordinates.latitude),
+                    longitude: parseFloat(userCoordinates.longitude),
                     color: 'red',
                     value: 1,
                 });
@@ -95,14 +98,35 @@ function App() {
 
     // Set isLoading to false if all data is loaded
     useEffect(() => {
-        if (apiToken && apiData && userCoordinates.latitude && userCoordinates.longitude) {
+        if (apiToken && apiData) {
             setIsLoading(false);
         }
-    }, [apiData, apiToken, userCoordinates.latitude, userCoordinates.longitude]);
+    }, [apiData, apiToken]);
 
-    const handleMapToggle = (checked) => {
-        setIsMapToggled(checked);
-    };
+    // Handle map rendering
+    useEffect(() => {
+        if (apiData && !isLoading) {
+            if (apiData && userCoordinates.longitude && userCoordinates.latitude && !isLoading) {
+                setShouldRenderMap(true);
+            }
+        }
+    }, [apiData, userCoordinates.latitude, isLoading, userCoordinates.longitude]);
+
+    // Debounce user coordinates form
+    useEffect(() => {
+        if (debouncedUserLatitude) {
+            setUserCoordinates((prevState) => ({
+                ...prevState,
+                latitude: debouncedUserLatitude,
+            }));
+        }
+        if (debouncedUserLongitude) {
+            setUserCoordinates((prevState) => ({
+                ...prevState,
+                longitude: debouncedUserLongitude,
+            }));
+        }
+    }, [debouncedUserLatitude, debouncedUserLongitude]);
 
     return isLoading ? (
         <div className="spinnerWrapper">
@@ -117,14 +141,34 @@ function App() {
                     <Switch onChange={handleMapToggle} checked={isMapToggled} />
                 </div>
             </header>
-            {processedApiData.length > 0 && (
+            <form>
+                <label className="formLabel">
+                    Latitude:
+                    <input
+                        type="number"
+                        name="latitude"
+                        onChange={(e) => setUserCoordinatesForm({ latitude: e.target.value })}
+                    />
+                </label>
+                <label className="formLabel">
+                    Longitude:
+                    <input
+                        type="number"
+                        name="longitude"
+                        onChange={(e) => setUserCoordinatesForm({ longitude: e.target.value })}
+                    />
+                </label>
+            </form>
+            {shouldRenderMap ? (
                 <div className="main">
                     {isMapToggled ? (
                         <WorldMap data={processedApiData} />
                     ) : (
-                        <BubbleMap data={processedApiData} />
+                        <XYChart data={processedApiData} />
                     )}
                 </div>
+            ) : (
+                <p>The map will render after you complete the coordinates.</p>
             )}
         </div>
     );

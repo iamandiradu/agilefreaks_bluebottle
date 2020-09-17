@@ -63,13 +63,7 @@ function WorldMap(props) {
         };
     }, [animateBullet, props.data]);
 
-    return (
-        <div
-            id="world-map"
-            style={{
-                height: window.innerHeight,
-            }}></div>
-    );
+    return <div id="world-map"></div>;
 }
 
 export default WorldMap;

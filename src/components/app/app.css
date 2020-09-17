@@ -6,6 +6,10 @@ body,
     background-color: #121212;
 }
 
+p {
+    color: #fff;
+}
+
 .app {
     text-align: center;
 }
@@ -44,8 +48,32 @@ body,
     pointer-events: none;
 }
 
-.link {
-    color: #61dafb;
+.formLabel {
+    color: #fff;
+    font-size: calc(10px + 1vmin);
+}
+.formLabel:nth-child(2) {
+    margin-left: 12px;
+}
+
+#xy-graph,
+#world-map {
+    height: 85vh;
+}
+
+input[type='number'] {
+    background-color: #585858;
+    border: none;
+    border-radius: 2px;
+    color: #fff;
+    text-align: center;
+    margin-left: 12px;
+    -moz-appearance: textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 @keyframes logo-spin {
