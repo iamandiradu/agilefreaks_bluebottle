@@ -1,13 +1,10 @@
 import axios from 'axios';
-import api from './urls.js';
+import urls from './urls.js';
 
 export default {
     getToken: async () => {
         try {
-            const response = await axios({
-                url: `${api.apiURL}/tokens`,
-                method: 'post',
-            });
+            const response = await axios.post(`${urls.apiURL}/tokens`);
             return response.data.token;
         } catch (error) {
             console.error(error);
@@ -15,9 +12,7 @@ export default {
     },
     getData: async (token) => {
         try {
-            const response = await axios({
-                url: `${api.apiURL}/coffee_shops?token=${token}`, //apiToken}`,
-                method: 'get',
+            const response = await axios.get(`${urls.apiURL}/coffee_shops?token=${token}`, {
                 headers: {
                     Accept: 'application/json',
                 },
