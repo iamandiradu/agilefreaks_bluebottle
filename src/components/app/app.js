@@ -138,24 +138,41 @@ function App() {
                 <img src={logo} className="logo" alt="logo" />
                 <div>
                     <span>Coffee Shop Finder Map </span>
-                    <Switch onChange={handleMapToggle} checked={isMapToggled} />
+                    <Switch
+                        className="mapToggle"
+                        onChange={handleMapToggle}
+                        checked={isMapToggled}
+                        id={`switchState-${isMapToggled}`}
+                    />
                 </div>
             </header>
             <form>
-                <label className="formLabel">
+                <label className="formLabel latitudeLabel">
                     Latitude:
                     <input
                         type="number"
                         name="latitude"
-                        onChange={(e) => setUserCoordinatesForm({ latitude: e.target.value })}
+                        value={userCoordinatesForm.latitude}
+                        onChange={(e) =>
+                            setUserCoordinatesForm({
+                                latitude: e.target.value,
+                                longitude: userCoordinatesForm.longitude,
+                            })
+                        }
                     />
                 </label>
-                <label className="formLabel">
+                <label className="formLabel longitudeLabel">
                     Longitude:
                     <input
                         type="number"
                         name="longitude"
-                        onChange={(e) => setUserCoordinatesForm({ longitude: e.target.value })}
+                        value={userCoordinatesForm.longitude}
+                        onChange={(e) =>
+                            setUserCoordinatesForm({
+                                longitude: e.target.value,
+                                latitude: userCoordinatesForm.latitude,
+                            })
+                        }
                     />
                 </label>
             </form>
@@ -168,7 +185,9 @@ function App() {
                     )}
                 </div>
             ) : (
-                <p>The map will render after you complete the coordinates.</p>
+                <p className="coordinatesDisclaimer">
+                    The map will render after you complete the coordinates.
+                </p>
             )}
         </div>
     );

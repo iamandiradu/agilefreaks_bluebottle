@@ -43,6 +43,10 @@ p {
     color: white;
 }
 
+.mapToggle {
+    height: calc(5px + 2vmin);
+}
+
 .logo {
     height: 6vmin;
     pointer-events: none;
