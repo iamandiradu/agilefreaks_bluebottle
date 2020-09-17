@@ -24,10 +24,10 @@ export default {
             });
             return response.data;
         } catch (error) {
-            const errorStatus = error.response.data.status;
+            const errorStatus = error.response.status;
             switch (errorStatus) {
                 case 401:
-                    console.log('401: Token invalid.');
+                    console.log('401: Invalid token.');
                     break;
                 case 406:
                     console.log('406: Unacceptable Accept format.');
