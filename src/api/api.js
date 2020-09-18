@@ -1,13 +1,10 @@
 import axios from 'axios';
-import api from './urls.js';
+import urls from './urls.js';
 
 export default {
     getToken: async () => {
         try {
-            const response = await axios({
-                url: `${api.apiURL}/tokens`,
-                method: 'post',
-            });
+            const response = await axios.post(urls.tokenURL);
             return response.data.token;
         } catch (error) {
             throw new Error('Unable to get a token.');
@@ -15,16 +12,14 @@ export default {
     },
     getData: async (token) => {
         try {
-            const response = await axios({
-                url: `${api.apiURL}/coffee_shops?token=${token}`, //apiToken}`,
-                method: 'get',
+            const response = await axios.get(`${urls.dataURL}?token=${token}`, {
                 headers: {
                     Accept: 'application/json',
                 },
             });
             return response.data;
         } catch (error) {
-            const errorStatus = error.response.status;
+            const errorStatus = error && error.response && error.response.status;
             let errorMessage = '';
             switch (errorStatus) {
                 case 401:
