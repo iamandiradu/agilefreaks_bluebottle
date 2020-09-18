@@ -10,7 +10,7 @@ export default {
             });
             return response.data.token;
         } catch (error) {
-            console.error(error);
+            throw new Error('Unable to get a token.');
         }
     },
     getData: async (token) => {
@@ -25,22 +25,25 @@ export default {
             return response.data;
         } catch (error) {
             const errorStatus = error.response.status;
+            let errorMessage = '';
             switch (errorStatus) {
                 case 401:
-                    console.log('401: Invalid token.');
+                    errorMessage = '401: Invalid token.';
                     break;
                 case 406:
-                    console.log('406: Unacceptable Accept format.');
+                    errorMessage = '406: Unacceptable Accept format.';
                     break;
                 case 503:
-                    console.log('503: Service Unavailable');
+                    errorMessage = '503: Service Unavailable';
                     break;
                 case 504:
-                    console.log('504: Timeout.');
+                    errorMessage = '504: Timeout.';
                     break;
                 default:
-                    console.log('Unprocessed HTTP status code: ', errorStatus);
+                    errorMessage = 'Unprocessed HTTP status code: ' + errorStatus;
             }
+
+            throw new Error(errorMessage);
         }
     },
 };

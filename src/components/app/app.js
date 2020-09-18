@@ -13,6 +13,7 @@ const coffeeShopNameDelimiter = 'Blue Bottle ';
 function App() {
     const [apiToken, setApiToken] = useState('');
     const [apiData, setApiData] = useState([]);
+    const [apiError, setApiError] = useState('');
     const [userCoordinates, setUserCoordinates] = useState({
         latitude: '',
         longitude: '',
@@ -35,16 +36,18 @@ function App() {
 
     // Get API Data
     useEffect(() => {
-        api.getToken()
-            .then((token) => {
+        async function fetchResources() {
+            try {
+                const token = await api.getToken();
+                const data = await api.getData(token);
+                setApiData(data);
                 setApiToken(token);
-                api.getData(token).then((data) => {
-                    setApiData(data);
-                });
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+            } catch (error) {
+                console.error(error.message);
+                setApiError(error.message);
+            }
+        }
+        fetchResources();
     }, []);
 
     // Process API Data & User coordinates
@@ -98,10 +101,10 @@ function App() {
 
     // Set isLoading to false if all data is loaded
     useEffect(() => {
-        if (apiToken && apiData) {
+        if ((apiToken && apiData) || apiError) {
             setIsLoading(false);
         }
-    }, [apiData, apiToken]);
+    }, [apiData, apiError, apiToken]);
 
     // Handle map rendering
     useEffect(() => {
@@ -131,6 +134,10 @@ function App() {
     return isLoading ? (
         <div className="spinnerWrapper">
             <img src={spinner} className="spinner" alt="spinner" />
+        </div>
+    ) : apiError ? (
+        <div className="app">
+            <p>The server connection could not be established. Please try again later.</p>
         </div>
     ) : (
         <div className="app">
