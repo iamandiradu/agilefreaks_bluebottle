@@ -96,52 +96,93 @@ function App() {
         }
     }, [debouncedUserLatitude, debouncedUserLongitude]);
 
-    return isLoading ? (
-        <div className="spinnerWrapper">
-            <img src={spinner} className="spinner" alt="spinner" />
-        </div>
-    ) : apiError ? (
-        <div className="app">
-            <p>The server connection could not be established. Please try again later.</p>
-        </div>
-    ) : (
-        <div className="app">
-            <header className="header">
-                <img src={logo} className="logo" alt="logo" />
-                <div>
-                    <span>Coffee Shop Finder Map </span>
-                    <Switch onChange={handleMapToggle} checked={isMapToggled} />
+    const renderSpinner = () => {
+        return (
+            isLoading && (
+                <div className="spinnerWrapper">
+                    <img src={spinner} className="spinner" alt="spinner" />
                 </div>
-            </header>
-            <form>
-                <label className="formLabel">
-                    Latitude:
-                    <input
-                        type="number"
-                        name="latitude"
-                        onChange={(e) => setUserCoordinatesForm({ latitude: e.target.value })}
-                    />
-                </label>
-                <label className="formLabel">
-                    Longitude:
-                    <input
-                        type="number"
-                        name="longitude"
-                        onChange={(e) => setUserCoordinatesForm({ longitude: e.target.value })}
-                    />
-                </label>
-            </form>
-            {shouldRenderMap ? (
-                <div className="main">
-                    {isMapToggled ? (
-                        <WorldMap data={processedApiData} />
-                    ) : (
-                        <XYChart data={processedApiData} />
+            )
+        );
+    };
+
+    const renderErrorScreen = () => {
+        return (
+            apiError && (
+                <div className="app">
+                    <p>The server connection could not be established. Please try again.</p>
+                </div>
+            )
+        );
+    };
+    const renderHeader = () => {
+        const renderCondition = !apiError && !isLoading;
+        return (
+            renderCondition && (
+                <header className="header">
+                    <img src={logo} className="logo" alt="logo" />
+                    <div>
+                        <span>Coffee Shop Finder Map </span>
+                        <Switch onChange={handleMapToggle} checked={isMapToggled} />
+                    </div>
+                </header>
+            )
+        );
+    };
+
+    const renderCoordinatesForm = () => {
+        const renderCondition = !apiError && !isLoading;
+        return (
+            renderCondition && (
+                <div>
+                    <form>
+                        <label className="formLabel">
+                            Latitude:
+                            <input
+                                type="number"
+                                name="latitude"
+                                onChange={(e) =>
+                                    setUserCoordinatesForm({ latitude: e.target.value })
+                                }
+                            />
+                        </label>
+                        <label className="formLabel">
+                            Longitude:
+                            <input
+                                type="number"
+                                name="longitude"
+                                onChange={(e) =>
+                                    setUserCoordinatesForm({ longitude: e.target.value })
+                                }
+                            />
+                        </label>
+                    </form>
+                    {!shouldRenderMap && (
+                        <p>The map will render after you complete the coordinates.</p>
                     )}
                 </div>
-            ) : (
-                <p>The map will render after you complete the coordinates.</p>
-            )}
+            )
+        );
+    };
+
+    const renderMapOrGraph = () => {
+        const MainComponent = isMapToggled ? WorldMap : XYChart;
+        return (
+            shouldRenderMap && (
+                <div className="main">
+                    <MainComponent data={processedApiData} />
+                </div>
+            )
+        );
+    };
+
+    return (
+        <div className="app">
+            {renderSpinner()}
+            {renderErrorScreen()}
+            {renderHeader()}
+            {renderCoordinatesForm()}
+            {renderMapOrGraph()}
         </div>
     );
 }
