@@ -8,7 +8,7 @@ import spinner from '../../images/spinner.svg';
 import './app.css';
 
 const coffeeShopsShownOnMap = 3;
-const coffeeShopNameDelimiter = 'Blue Bottle ';
+const coffeeShopNameSplitter = 'Blue Bottle ';
 
 function App() {
     const [apiToken, setApiToken] = useState('');
@@ -56,48 +56,51 @@ function App() {
             let coffeeShopsData = [];
 
             if (apiData.length > 0) {
-                apiData.forEach((coffeeShop) => {
-                    coffeeShop.distance = getUserDistance(
-                        userCoordinates,
-                        coffeeShop.x,
-                        coffeeShop.y
-                    );
-                });
-                apiData.sort((a, b) => (a.distance > b.distance ? 1 : -1));
-                apiData.forEach((coffeeShop, index) => {
-                    index < coffeeShopsShownOnMap &&
-                        coffeeShopsData.push({
-                            label: coffeeShopNameDelimiter
-                                ? coffeeShop.name.split(coffeeShopNameDelimiter).pop()
-                                : coffeeShop.name,
-                            latitude: parseFloat(coffeeShop.x),
-                            longitude: parseFloat(coffeeShop.y),
-                            color: '#009ED9',
-                            customTooltip: `${getUserDistance(
-                                userCoordinates,
-                                coffeeShop.x,
-                                coffeeShop.y
-                            )} km`,
-                            value: 1,
-                        });
-                });
-                coffeeShopsData.push({
+                const userData = {
                     label: 'User',
                     latitude: parseFloat(userCoordinates.latitude),
                     longitude: parseFloat(userCoordinates.longitude),
-                    color: 'red',
+                    color: '#ff0000',
                     value: 1,
-                });
+                };
+
+                // Generate the coffee shops data (sort, slice, distance, tooltip)
+                coffeeShopsData = apiData
+                    .reduce((acc, coffeeShop) => {
+                        //  Create tooltip. ex: 12345.6 km
+                        const tooltip = `${getUserDistance(
+                            userCoordinates,
+                            coffeeShop.x,
+                            coffeeShop.y
+                        )} km`;
+
+                        // If a splitter text is present, remove that text from the coffee shop's name.
+                        const label = coffeeShopNameSplitter
+                            ? coffeeShop.name.split(coffeeShopNameSplitter).pop()
+                            : coffeeShop.name;
+
+                        const coffeeShopData = {
+                            label,
+                            customTooltip: tooltip,
+                            latitude: parseFloat(coffeeShop.x),
+                            longitude: parseFloat(coffeeShop.y),
+                            distance: getUserDistance(userCoordinates, coffeeShop.x, coffeeShop.y),
+                            color: '#009ED9',
+                            value: 1, // This value is required by the AmCharts package to calculate the elements radius ratio.
+                        };
+
+                        acc.push(coffeeShopData);
+                        return acc;
+                    }, [])
+                    .sort((a, b) => (a.distance > b.distance ? 1 : -1))
+                    .slice(0, coffeeShopsShownOnMap);
+
+                // Push user data into data array
+                coffeeShopsData.push(userData);
             }
             setProcessedApiData(coffeeShopsData);
         }
-    }, [
-        apiData,
-        isMapToggled,
-        userCoordinates,
-        userCoordinates.latitude,
-        userCoordinates.longitude,
-    ]);
+    }, [apiData, userCoordinates, userCoordinates.latitude, userCoordinates.longitude]);
 
     // Set isLoading to false if all data is loaded
     useEffect(() => {
