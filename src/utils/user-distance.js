@@ -1,15 +1,28 @@
+/* Haversine formula */
+
+function toRad(coordinate) {
+    return (coordinate * Math.PI) / 180;
+}
+
 export function getUserDistance(userCoordinates, latitude, longitude) {
     if (userCoordinates.latitude) {
-        var p = 0.017453292519943295; // Math.PI / 180
-        var c = Math.cos;
-        var a =
-            0.5 -
-            c((latitude - userCoordinates.latitude) * p) / 2 +
-            (c(userCoordinates.latitude * p) *
-                c(latitude * p) *
-                (1 - c((longitude - userCoordinates.longitude) * p))) /
-                2;
-        return Math.round((12742 * Math.asin(Math.sqrt(a)) + Number.EPSILON) * 100) / 100; // 2 * R; R = 6371 km
+        const earthRadius = 6371;
+        const latitudeDifference = latitude - userCoordinates.latitude;
+        const longitudeDifference = longitude - userCoordinates.longitude;
+        const latitudeDifferenceInRadians = toRad(latitudeDifference);
+        const longitudeDifferenceInRadians = toRad(longitudeDifference);
+        const userLatitudeInRadians = toRad(userCoordinates.latitude);
+        const latitudeInRadians = toRad(latitude);
+
+        const a =
+            Math.sin(latitudeDifferenceInRadians / 2) * Math.sin(latitudeDifferenceInRadians / 2) +
+            Math.cos(userLatitudeInRadians) *
+                Math.cos(latitudeInRadians) *
+                Math.sin(longitudeDifferenceInRadians / 2) *
+                Math.sin(longitudeDifferenceInRadians / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const d = earthRadius * c;
+        return Math.round(d * 100) / 100;
     } else {
         return false;
     }

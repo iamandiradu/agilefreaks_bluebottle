@@ -28,7 +28,8 @@ describe('App', () => {
             app = await mount(<App />);
         });
         expect(app.exists('.spinnerWrapper')).toBeTruthy();
-        expect(app.exists('.app')).toBeFalsy();
+        expect(app.exists('.header')).toBeFalsy();
+        expect(app.exists('.formWrapper')).toBeFalsy();
         api.getToken = jest.fn(() => Promise.resolve(123));
         api.getData = jest.fn(() => Promise.resolve([]));
         await act(async () => {
