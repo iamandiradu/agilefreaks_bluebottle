@@ -25,6 +25,13 @@ p {
     pointer-events: none;
 }
 
+.errorScreen {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 @media (prefers-reduced-motion: no-preference) {
     .spinner {
         animation: logo-spin infinite 2s linear;

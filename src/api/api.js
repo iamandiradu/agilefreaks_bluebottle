@@ -1,44 +1,35 @@
 import axios from 'axios';
 import urls from './urls.js';
 
+let requestRetriesOnFail = 3;
+const retryableErrors = [401, 503, 504];
+
 export default {
     getToken: async () => {
-        try {
-            const response = await axios.post(urls.tokenURL);
-            return response.data.token;
-        } catch (error) {
-            throw new Error('Unable to get a token.');
-        }
+        const response = await axios.post(urls.tokenURL, {
+            timeout: 1000,
+        });
+        return response.data.token;
     },
     getData: async (token) => {
-        try {
-            const response = await axios.get(`${urls.dataURL}?token=${token}`, {
-                headers: {
-                    Accept: 'application/json',
-                },
-            });
-            return response.data;
-        } catch (error) {
-            const errorStatus = error && error.response && error.response.status;
-            let errorMessage = '';
-            switch (errorStatus) {
-                case 401:
-                    errorMessage = '401: Invalid token.';
-                    break;
-                case 406:
-                    errorMessage = '406: Unacceptable Accept format.';
-                    break;
-                case 503:
-                    errorMessage = '503: Service Unavailable';
-                    break;
-                case 504:
-                    errorMessage = '504: Timeout.';
-                    break;
-                default:
-                    errorMessage = 'Unprocessed HTTP status code: ' + errorStatus;
-            }
+        const response = await axios.get(`${urls.dataURL}?token=${token}`, {
+            headers: {
+                Accept: 'application/json',
+            },
+            timeout: 1000,
+        });
+        return response.data;
+    },
+    retryRequests: (error, onRetryFcn, onErrorFcn) => {
+        const errorStatus = error && error.response && error.response.status;
+        const isRetryableError = retryableErrors.includes(errorStatus);
+        const isTimeout = error.code === 'ECONNABORTED';
 
-            throw new Error(errorMessage);
+        if ((isRetryableError || isTimeout) && requestRetriesOnFail) {
+            requestRetriesOnFail -= 1;
+            onRetryFcn();
+        } else {
+            onErrorFcn(true);
         }
     },
 };
