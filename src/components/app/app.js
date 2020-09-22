@@ -43,8 +43,7 @@ function App() {
                 setApiData(data);
                 setApiToken(token);
             } catch (error) {
-                console.error(error.message);
-                setApiError(error.message);
+                api.retryRequests(error, fetchResources, setApiError);
             }
         }
         fetchResources();
@@ -109,7 +108,7 @@ function App() {
     const renderErrorScreen = () => {
         return (
             apiError && (
-                <div className="app">
+                <div className="errorScreen">
                     <p>The server connection could not be established. Please try again.</p>
                 </div>
             )
