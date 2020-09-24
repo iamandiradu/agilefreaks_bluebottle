@@ -43,7 +43,7 @@ function App() {
                 setApiData(data);
                 setApiToken(token);
             } catch (error) {
-                api.retryRequests(error, fetchResources, setApiError);
+                setIsApiError(true);
             }
         }
         fetchResources();
