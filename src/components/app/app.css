@@ -1,0 +1,97 @@
+html,
+body,
+#root,
+.app {
+    height: 100%;
+    background-color: #121212;
+}
+
+p {
+    color: #fff;
+}
+
+.app {
+    text-align: center;
+}
+
+.spinnerWrapper {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.spinner {
+    height: 20vmin;
+    pointer-events: none;
+}
+
+.errorScreen {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .spinner {
+        animation: logo-spin infinite 2s linear;
+    }
+}
+
+.header {
+    background-color: #121212;
+    min-height: 8vh;
+    height: 10vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.mapToggle {
+    height: calc(5px + 2vmin);
+}
+
+.logo {
+    height: 6vmin;
+    pointer-events: none;
+}
+
+.formLabel {
+    color: #fff;
+    font-size: calc(10px + 1vmin);
+}
+.formLabel:nth-child(2) {
+    margin-left: 12px;
+}
+
+#xy-graph,
+#world-map {
+    height: 85vh;
+}
+
+input[type='number'] {
+    background-color: #585858;
+    border: none;
+    border-radius: 2px;
+    color: #fff;
+    text-align: center;
+    margin-left: 12px;
+    -moz-appearance: textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+@keyframes logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
