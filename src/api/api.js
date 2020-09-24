@@ -1,8 +1,15 @@
+import axiosRetry, { isNetworkOrIdempotentRequestError } from 'axios-retry';
 import axios from 'axios';
 import urls from './urls.js';
 
 let requestRetriesOnFail = 3;
-const retryableErrors = [401, 503, 504];
+
+axiosRetry(axios, {
+    retries: requestRetriesOnFail,
+    shouldResetTimeout: true,
+    retryCondition: (error) =>
+        isNetworkOrIdempotentRequestError(error) || error.code === 'ECONNABORTED',
+});
 
 export default {
     getToken: async () => {
@@ -19,17 +26,5 @@ export default {
             timeout: 1000,
         });
         return response.data;
-    },
-    retryRequests: (error, onRetryFcn, onErrorFcn) => {
-        const errorStatus = error && error.response && error.response.status;
-        const isRetryableError = retryableErrors.includes(errorStatus);
-        const isTimeout = error.code === 'ECONNABORTED';
-
-        if ((isRetryableError || isTimeout) && requestRetriesOnFail) {
-            requestRetriesOnFail -= 1;
-            onRetryFcn();
-        } else {
-            onErrorFcn(true);
-        }
     },
 };

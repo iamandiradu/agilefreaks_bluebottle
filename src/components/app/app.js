@@ -13,7 +13,7 @@ const coffeeShopNameSplitter = 'Blue Bottle ';
 function App() {
     const [apiToken, setApiToken] = useState('');
     const [apiData, setApiData] = useState([]);
-    const [apiError, setApiError] = useState('');
+    const [isApiError, setIsApiError] = useState('');
     const [userCoordinates, setUserCoordinates] = useState({
         latitude: '',
         longitude: '',
@@ -43,7 +43,7 @@ function App() {
                 setApiData(data);
                 setApiToken(token);
             } catch (error) {
-                api.retryRequests(error, fetchResources, setApiError);
+                setIsApiError(true);
             }
         }
         fetchResources();
@@ -65,10 +65,10 @@ function App() {
 
     // Set isLoading to false if all data is loaded
     useEffect(() => {
-        if ((apiToken && apiData) || apiError) {
+        if ((apiToken && apiData) || isApiError) {
             setIsLoading(false);
         }
-    }, [apiData, apiError, apiToken]);
+    }, [apiData, isApiError, apiToken]);
 
     // Handle map rendering
     useEffect(() => {
@@ -107,7 +107,7 @@ function App() {
 
     const renderErrorScreen = () => {
         return (
-            apiError && (
+            isApiError && (
                 <div className="errorScreen">
                     <p>The server connection could not be established. Please try again.</p>
                 </div>
@@ -115,7 +115,7 @@ function App() {
         );
     };
     const renderHeader = () => {
-        const renderCondition = !apiError && !isLoading;
+        const renderCondition = !isApiError && !isLoading;
         return (
             renderCondition && (
                 <header className="header">
@@ -135,7 +135,7 @@ function App() {
     };
 
     const renderCoordinatesForm = () => {
-        const renderCondition = !apiError && !isLoading;
+        const renderCondition = !isApiError && !isLoading;
         return (
             renderCondition && (
                 <div className="formWrapper">
