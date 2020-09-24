@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/agilefreaks_bluebottle/precache-manifest.97e90655c683d5becb83b39105cf2907.js"
+  "/agilefreaks_bluebottle/precache-manifest.6d44d929180ae184fa3d646529391519.js"
 );
 
 self.addEventListener('message', (event) => {

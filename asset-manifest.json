@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/agilefreaks_bluebottle/static/css/main.73d23504.chunk.css",
-    "main.js": "/agilefreaks_bluebottle/static/js/main.99c284ac.chunk.js",
-    "main.js.map": "/agilefreaks_bluebottle/static/js/main.99c284ac.chunk.js.map",
+    "main.js": "/agilefreaks_bluebottle/static/js/main.5568dbc7.chunk.js",
+    "main.js.map": "/agilefreaks_bluebottle/static/js/main.5568dbc7.chunk.js.map",
     "runtime-main.js": "/agilefreaks_bluebottle/static/js/runtime-main.cd08b940.js",
     "runtime-main.js.map": "/agilefreaks_bluebottle/static/js/runtime-main.cd08b940.js.map",
     "xlsx.js": "/agilefreaks_bluebottle/static/js/xlsx.334ce29f.chunk.js",
@@ -16,7 +16,7 @@
     "static/js/6.de52ac0b.chunk.js": "/agilefreaks_bluebottle/static/js/6.de52ac0b.chunk.js",
     "static/js/6.de52ac0b.chunk.js.map": "/agilefreaks_bluebottle/static/js/6.de52ac0b.chunk.js.map",
     "index.html": "/agilefreaks_bluebottle/index.html",
-    "precache-manifest.97e90655c683d5becb83b39105cf2907.js": "/agilefreaks_bluebottle/precache-manifest.97e90655c683d5becb83b39105cf2907.js",
+    "precache-manifest.6d44d929180ae184fa3d646529391519.js": "/agilefreaks_bluebottle/precache-manifest.6d44d929180ae184fa3d646529391519.js",
     "service-worker.js": "/agilefreaks_bluebottle/service-worker.js",
     "static/css/main.73d23504.chunk.css.map": "/agilefreaks_bluebottle/static/css/main.73d23504.chunk.css.map",
     "static/js/4.1655ddb3.chunk.js.LICENSE.txt": "/agilefreaks_bluebottle/static/js/4.1655ddb3.chunk.js.LICENSE.txt",
@@ -28,6 +28,6 @@
     "static/js/runtime-main.cd08b940.js",
     "static/js/4.1655ddb3.chunk.js",
     "static/css/main.73d23504.chunk.css",
-    "static/js/main.99c284ac.chunk.js"
+    "static/js/main.5568dbc7.chunk.js"
   ]
 }
