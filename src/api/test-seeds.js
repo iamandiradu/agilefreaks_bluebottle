@@ -28,7 +28,15 @@ const seeds = {
         error: {
             response: {
                 status: 503,
-                statusText: '"Service Unavailable"',
+                statusText: 'Service Unavailable',
+            },
+        },
+    },
+    mock504Error: {
+        error: {
+            response: {
+                status: 504,
+                statusText: 'Gateway Timeout',
             },
         },
     },
